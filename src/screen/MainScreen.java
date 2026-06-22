@@ -7,13 +7,14 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javafx.scene.paint.Color;
+import crud.Crud;
+import ldscreen.LDScreen;
 
 import color.HexGen;
 
@@ -21,17 +22,29 @@ public class MainScreen {
 	
 	private Pane mainPane;
 	private Stage mainStage;
+	
 	private Image userImage;
 	private ImageView imageHolder;
+	
 	private Button openFile;
-	//private Text averageHex;
+	private Button getHex;
+	private Button saveHex;
+	private Button loadHex;
+
+	
 	private Label averageHex;
+	
+	private HexGen hex;
+	private File fileHolder;
+	
+	private Scene mainScene;
 
 
 	public MainScreen() {
 		
 		mainPane = new Pane();
 		
+		//Default image and sizing
 		userImage = new Image("file:images/white.png");
 		imageHolder = new ImageView(userImage);
 		imageHolder.setFitWidth(300);
@@ -40,14 +53,8 @@ public class MainScreen {
 		imageHolder.setY(100);
 		mainPane.getChildren().add(imageHolder);
 		
-		openFile = new Button("Load Image");
-		openFile.setOnAction(e -> {
-			loadImage();
-		});
 		
-		openFile.relocate(620, 500);
-		mainPane.getChildren().add(openFile);
-		
+		//Default Hex and sizing
 		averageHex = new Label("Placeholder");
 		averageHex.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: #000000;");
 		averageHex.setFont(Font.font("Nunito", 48.0));
@@ -55,32 +62,79 @@ public class MainScreen {
 		averageHex.setMinSize(250, 250);
 		averageHex.relocate(100, 100);
 		mainPane.getChildren().add(averageHex);
+		openFile = new Button("Load Image");
+		
+		openFile.setOnAction(e -> {
+			loadImage();
+			saveHex.setDisable(false);
+			getHex.setDisable(false);
+		});
+		
+		openFile.relocate(620, 500);
+		mainPane.getChildren().add(openFile);
+		
+		getHex = new Button("Generate Hex");
+		getHex.relocate(720, 550);
+		getHex.setDisable(true);
+		getHex.setOnAction(e -> {
+			genHex();
+		});
+		
+		mainPane.getChildren().add(getHex);
+		
+		
+		
+		saveHex = new Button("Save Color");
+		saveHex.setDisable(true);
+		saveHex.setOnAction(e -> {
+			new Crud().save(averageHex.getText(), "Test", fileHolder.getAbsolutePath());
+		});
+		
+		saveHex.relocate(820, 500);
+		mainPane.getChildren().add(saveHex);
+		
+		loadHex = new Button("View Color List");
+		loadHex.setAlignment(Pos.CENTER);
+		loadHex.relocate(1020, 500);
+		
+		loadHex.setOnAction(e -> {
+			new LDScreen(mainStage, mainScene, imageHolder, averageHex, getHex, saveHex, fileHolder);
+		});
+		
+		mainPane.getChildren().add(loadHex);
+
+		
 		
 		showScreen();
 	}
 	
-	public void loadImage() {
+	private void loadImage() {
 		JFileChooser fileChooser = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg");
 	    fileChooser.setFileFilter(filter);
 	    int returnVal = fileChooser.showOpenDialog(null);
 	    
 	    if(returnVal == JFileChooser.APPROVE_OPTION) {
-	    	File fileHolder = fileChooser.getSelectedFile();
+	    	fileHolder = fileChooser.getSelectedFile();
 	    	imageHolder.setImage(new Image(fileHolder.toURI().toString()));
-	    	HexGen hex = new HexGen(fileHolder);
-	    	averageHex.setStyle("-fx-background-color: " + hex.getHex() +  ";-fx-border-color: " + hex.getCompliment());
-	    	averageHex.setText(hex.getHex());
-	    	averageHex.setTextFill(Color.web(hex.getCompliment()));
+	    	
 	    }
 
 	}
 	
+	private void genHex() {
+		fileHolder = new File(imageHolder.getImage().getUrl().substring(6));
+		hex = new HexGen(fileHolder);
+    	averageHex.setStyle("-fx-background-color: " + hex.getHex() +  ";-fx-border-color: " + hex.getCompliment());
+    	averageHex.setText(hex.getHex());
+    	averageHex.setTextFill(Color.web(hex.getCompliment()));
+	}
+		
 	private void showScreen() {
-		Scene scene = new Scene(mainPane,1920,1080);
+		mainScene = new Scene(mainPane,1920,1080);
 		mainStage = new Stage();
 		mainStage.setTitle("Average Color Picker");
-		mainStage.setScene(scene);
+		mainStage.setScene(mainScene);
 		mainStage.setMaximized(true);
 		mainStage.show();
 	}
