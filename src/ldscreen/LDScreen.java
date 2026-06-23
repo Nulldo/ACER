@@ -78,7 +78,7 @@ public class LDScreen {
 			System.out.println(path);
 			fileHolder = new File(path);
 			averageHex.setText(hex);
-			averageHex.setStyle("-fx-text-fill "+ hex +";-fx-background-color: " + hex +  ";-fx-border-color: " + comp);
+			averageHex.setStyle("-fx-text-fill: "+ comp +";-fx-background-color: " + hex +  ";-fx-border-color: " + comp + ";");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
