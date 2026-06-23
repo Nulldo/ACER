@@ -33,8 +33,8 @@ public class Crud {
 		}
 	}
 	
-	public void save(String hex, String name, String path) {
-		String insertStatement = "INSERT INTO hex_values VALUES(DEFAULT, '" + hex + "', '" + name + "', '" + path + "')";		
+	public void save(String hex, String comp,String name, String path) {
+		String insertStatement = "INSERT INTO hex_values VALUES(DEFAULT, '" + hex + "', '" + comp + "', '" + name + "', '" + path + "')";		
 		System.out.println(insertStatement);
 		
 		try {
@@ -48,7 +48,7 @@ public class Crud {
 	public ResultSet load() {
 		ResultSet resultSet = null;
 		
-		String selectStatement = "SELECT hex, name, image_path FROM hex_values WHERE color_id = 5";
+		String selectStatement = "SELECT hex, compliment, name, image_path FROM hex_values WHERE color_id = 9";
 		
 		try {
 			resultSet = statement.executeQuery(selectStatement);

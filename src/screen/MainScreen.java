@@ -13,6 +13,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import crud.Crud;
 import ldscreen.LDScreen;
 
@@ -87,7 +88,7 @@ public class MainScreen {
 		saveHex = new Button("Save Color");
 		saveHex.setDisable(true);
 		saveHex.setOnAction(e -> {
-			new Crud().save(averageHex.getText(), "Test", fileHolder.getAbsolutePath());
+			new Crud().save(averageHex.getText(), hex.getCompliment(averageHex.getText()), "Test", imageHolder.getImage().getUrl());
 		});
 		
 		saveHex.relocate(820, 500);
@@ -123,6 +124,7 @@ public class MainScreen {
 	}
 	
 	private void genHex() {
+		System.out.println(imageHolder.getImage().getUrl().substring(6));
 		fileHolder = new File(imageHolder.getImage().getUrl().substring(6));
 		hex = new HexGen(fileHolder);
     	averageHex.setStyle("-fx-background-color: " + hex.getHex() +  ";-fx-border-color: " + hex.getCompliment());

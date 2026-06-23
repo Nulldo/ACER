@@ -5,8 +5,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javafx.scene.image.Image;
 
 public class HexGen {
 	
@@ -15,9 +13,6 @@ public class HexGen {
 	private int b;
 	private BufferedImage image;
 	public HexGen(File file) {
-		BufferedImage image;
-
-		
 		try {
 			image = ImageIO.read(file);
 			r=0;
@@ -50,6 +45,19 @@ public class HexGen {
 		int compG = 255 - g;
 		int compB = 255 - b;
 		return String.format("#%02X%02X%02X", compR, compG, compB);
+	}
+	
+	public String getCompliment(String hex) {
+		 Color color = Color.decode(hex);
+		 r = color.getRed();
+		 g = color.getGreen();
+		 b = color.getBlue();
+		 
+		int compR = 255 - r;
+		int compG = 255 - g;
+		int compB = 255 - b;
+		return String.format("#%02X%02X%02X", compR, compG, compB);
+		 
 	}
 
 }

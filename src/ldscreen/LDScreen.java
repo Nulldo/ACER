@@ -66,16 +66,19 @@ public class LDScreen {
 		try {
 			String hex = null;
 			String path = null;
+			String comp = null;
 			
 			while (resultSet.next()) {
 				 hex = resultSet.getString("hex");
 				 path = resultSet.getString("image_path");
+				 comp = resultSet.getString("compliment");
 			}
 			
 			imageHolder.setImage( new Image(path));
 			System.out.println(path);
 			fileHolder = new File(path);
 			averageHex.setText(hex);
+			averageHex.setStyle("-fx-text-fill "+ hex +";-fx-background-color: " + hex +  ";-fx-border-color: " + comp);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
