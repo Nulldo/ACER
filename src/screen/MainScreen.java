@@ -4,8 +4,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,13 +18,13 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import crud.Crud;
-import ldscreen.LDScreen;
+import ldscreen.*;
 
 import color.HexGen;
 
 public class MainScreen {
 	
-	private Pane mainPane;
+	private StackPane mainPane;
 	private Stage mainStage;
 	
 	private Image userImage;
@@ -35,22 +38,29 @@ public class MainScreen {
 	
 	private Label averageHex;
 	
+	private Label name;
+	
 	private HexGen hex;
-	private File fileHolder;
+	//private File fileHolder;
 	
 	private Scene mainScene;
+	
+	private TextField nameField;
+	private FileWork fileHolder;
 
 
 	public MainScreen() {
+		//file workaround for getting hex from a file
+		fileHolder = new FileWork();
 		
-		mainPane = new Pane();
+		mainPane = new StackPane();
 		
 		//Default image and sizing
 		userImage = new Image("file:images/white.png");
 		imageHolder = new ImageView(userImage);
 		imageHolder.setFitWidth(300);
 		imageHolder.setFitHeight(300);
-		imageHolder.setX(620);
+		imageHolder.setTranslateY(-200);
 		imageHolder.setY(100);
 		mainPane.getChildren().add(imageHolder);
 		
@@ -61,37 +71,43 @@ public class MainScreen {
 		averageHex.setFont(Font.font("Nunito", 48.0));
 		averageHex.setAlignment(Pos.CENTER);
 		averageHex.setMinSize(250, 250);
-		averageHex.relocate(100, 100);
+		averageHex.setTranslateX(-400);
+		averageHex.setTranslateY(-200);
+		
 		mainPane.getChildren().add(averageHex);
 		openFile = new Button("Load Image");
 		
 		openFile.setOnAction(e -> {
 			loadImage();
-			saveHex.setDisable(false);
 			getHex.setDisable(false);
 		});
 		
-		openFile.relocate(620, 500);
+		openFile.setTranslateY(20);
+		openFile.setTranslateX(-100);
+		
 		mainPane.getChildren().add(openFile);
 		
 		getHex = new Button("Generate Hex");
-		getHex.relocate(720, 550);
+		
 		getHex.setDisable(true);
 		getHex.setOnAction(e -> {
 			genHex();
+			saveHex.setDisable(false);
 		});
 		
 		mainPane.getChildren().add(getHex);
 		
 		
 		
+		
 		saveHex = new Button("Save Color");
 		saveHex.setDisable(true);
 		saveHex.setOnAction(e -> {
-			new Crud().save(averageHex.getText(), hex.getCompliment(averageHex.getText()), "Test", imageHolder.getImage().getUrl());
+			new Crud().save(averageHex.getText(), hex.getCompliment(averageHex.getText()), nameField.getText(), imageHolder.getImage().getUrl());
 		});
 		
-		saveHex.relocate(820, 500);
+		saveHex.setTranslateY(20);
+		saveHex.setTranslateX(100);
 		mainPane.getChildren().add(saveHex);
 		
 		loadHex = new Button("View Color List");
@@ -102,7 +118,19 @@ public class MainScreen {
 			new LDScreen(mainStage, mainScene, imageHolder, averageHex, getHex, saveHex, fileHolder);
 		});
 		
+		loadHex.setTranslateY(200);
+		loadHex.setTranslateX(350);
+		
 		mainPane.getChildren().add(loadHex);
+		
+		name = new Label("Enter Name:");
+		nameField = new TextField();
+		HBox nameHolder = new HBox();
+		nameHolder.getChildren().addAll(name,nameField);
+		nameHolder.setMaxHeight(name.getHeight());
+		nameHolder.setMaxWidth(250);
+		nameHolder.setTranslateY(60);
+		mainPane.getChildren().add(nameHolder);
 
 		
 		
@@ -116,26 +144,26 @@ public class MainScreen {
 	    int returnVal = fileChooser.showOpenDialog(null);
 	    
 	    if(returnVal == JFileChooser.APPROVE_OPTION) {
-	    	fileHolder = fileChooser.getSelectedFile();
-	    	imageHolder.setImage(new Image(fileHolder.toURI().toString()));
+	    	fileHolder.setFile(fileChooser.getSelectedFile());
+	    	imageHolder.setImage(new Image(fileHolder.getFile().toURI().toString()));
 	    	
 	    }
 
 	}
 	
 	private void genHex() {
-		System.out.println(imageHolder.getImage().getUrl().substring(6));
-		fileHolder = new File(imageHolder.getImage().getUrl().substring(6));
-		hex = new HexGen(fileHolder);
+		
+		hex = new HexGen(fileHolder.getFile());
     	averageHex.setStyle("-fx-background-color: " + hex.getHex() +  ";-fx-border-color: " + hex.getCompliment());
     	averageHex.setText(hex.getHex());
     	averageHex.setTextFill(Color.web(hex.getCompliment()));
 	}
 		
 	private void showScreen() {
-		mainScene = new Scene(mainPane,1920,1080);
+		mainScene = new Scene(mainPane, 1550, 790);
 		mainStage = new Stage();
 		mainStage.setTitle("Average Color Picker");
+        
 		mainStage.setScene(mainScene);
 		mainStage.setMaximized(true);
 		mainStage.show();

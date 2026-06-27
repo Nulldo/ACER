@@ -45,10 +45,25 @@ public class Crud {
 		}
 	}
 	
-	public ResultSet load() {
+	public ResultSet load(int id) {
 		ResultSet resultSet = null;
 		
-		String selectStatement = "SELECT hex, compliment, name, image_path FROM hex_values WHERE color_id = 9";
+		String selectStatement = "SELECT hex, compliment, name, image_path FROM hex_values WHERE color_id = " + id;
+		
+		try {
+			resultSet = statement.executeQuery(selectStatement);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultSet;
+	}
+	
+	public ResultSet loadAll() {
+		ResultSet resultSet = null;
+		
+		String selectStatement = "SELECT * FROM hex_values";
 		
 		try {
 			resultSet = statement.executeQuery(selectStatement);
