@@ -34,7 +34,21 @@ public class Crud {
 	}
 	
 	public void save(String hex, String comp,String name, String path) {
+		
 		String insertStatement = "INSERT INTO hex_values VALUES(DEFAULT, '" + hex + "', '" + comp + "', '" + name + "', '" + path + "')";		
+		System.out.println(insertStatement);
+		
+		try {
+			statement.executeUpdate(insertStatement);
+			System.out.println("Hex saved successful");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void save(String hex, String comp,String name) {
+		
+		String insertStatement = "INSERT INTO hex_values VALUES(DEFAULT, '" + hex + "', '" + comp + "', '" + name + "', " + null + ")";		
 		System.out.println(insertStatement);
 		
 		try {
@@ -75,8 +89,8 @@ public class Crud {
 		return resultSet;
 	}
 	
-	public void delete() {
-		String deleteStatement = "DELETE FROM student WHERE color_id = '" + 1 + "'";
+	public void delete(int id) {
+		String deleteStatement = "DELETE FROM hex_values WHERE color_id = '" + id + "'";
 		
 		try {
 			statement.executeUpdate(deleteStatement);
