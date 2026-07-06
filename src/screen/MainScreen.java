@@ -44,7 +44,9 @@ public class MainScreen {
 	private Button clearImage;
 	
 	private Label averageHex;
+	private Label average;
 	private Label compHex;
+	private Label comp;
 	
 	private Label name;
 	
@@ -58,6 +60,10 @@ public class MainScreen {
 	private Slider red;
 	private Slider green;
 	private Slider blue;
+	
+	private Label rLabel;
+	private Label gLabel;
+	private Label bLabel;
 	
 
 
@@ -91,15 +97,22 @@ public class MainScreen {
 		averageHex.setAlignment(Pos.CENTER);
 		averageHex.setMinSize(300, 300);
 		
+		average = new Label("Average Hex");
+		average.setFont(Font.font("Nunito", 48.0));
+		average.setVisible(false);
+		
 		compHex = new Label("Compliment\nColor");
 		compHex.setStyle("-fx-background-color: #000000; -fx-border-color: #FFFFFF;-fx-text-fill: #FFFFFF");
 		compHex.setFont(Font.font("Nunito", 48.0));
 		compHex.setAlignment(Pos.CENTER);
 		compHex.setMinSize(300, 300);
 		
+		comp = new Label("Compliment Color");
+		comp.setFont(Font.font("Nunito", 48.0));
+		comp.setVisible(false);
 		
 		
-		mainPane.getChildren().addAll(averageHex, compHex);
+		mainPane.getChildren().addAll(averageHex, compHex, average, comp);
 		openFile = new Button("Load Image");
 		
 		openFile.setOnAction(e -> {
@@ -143,8 +156,8 @@ public class MainScreen {
 		
 		mainPane.getChildren().add(loadHex);
 		
-		name = new Label("Enter Name:");
-		nameField = new TextField();
+		name = new Label("Color Name:");
+		nameField = new TextField("");
 		nameHolder = new HBox();
 		nameHolder.getChildren().addAll(name,nameField, saveHex);
 		nameHolder.setMaxHeight(name.getHeight());
@@ -156,6 +169,9 @@ public class MainScreen {
 		clearImage.setOnAction(e ->{
 			imageHolder.setImage(null);
 			saveHex.setDisable(false);
+			getHex.setDisable(true);
+			average.setVisible(true);
+			comp.setVisible(true);
 			if (averageHex.getText() == ("Average\nHex")) {
 				averageHex.setText("#FFFFFF");
 				compHex.setText("#000000");
@@ -189,7 +205,8 @@ public class MainScreen {
 	}
 	
 	private void genHex() {
-		
+		average.setVisible(true);
+		comp.setVisible(true);
 		hex = new HexGen(fileHolder.getFile());
     	averageHex.setStyle("-fx-background-color: " + hex.getHex() +  ";-fx-border-color: " + hex.getCompliment() +"; -fx-text-fill: " + hex.getCompliment());
     	averageHex.setText(hex.getHex());
@@ -227,6 +244,10 @@ public class MainScreen {
 		red.setShowTickLabels(true);
 		red.setValue(255);
 		
+		rLabel = new Label("Red");
+		rLabel.setTranslateX(-610);
+		rLabel.setTranslateY(120);
+		
 		red.valueProperty().addListener(e -> {
 			changeHex();
 		});
@@ -240,6 +261,10 @@ public class MainScreen {
 		green.setBlockIncrement(1);
 		green.setShowTickLabels(true);
 		green.setValue(255);
+		
+		gLabel = new Label("Green");
+		gLabel.setTranslateX(-610);
+		gLabel.setTranslateY(150);
 		
 		green.valueProperty().addListener(e -> {
 			changeHex();
@@ -255,16 +280,22 @@ public class MainScreen {
 		blue.setShowTickLabels(true);
 		blue.setValue(255);
 		
+		bLabel = new Label("Blue");
+		bLabel.setTranslateX(-610);
+		bLabel.setTranslateY(180);
+		
 		blue.valueProperty().addListener(e -> {
 			changeHex();
 		});
 		
 		
-		mainPane.getChildren().addAll(red,green,blue);
+		mainPane.getChildren().addAll(red,green,blue,rLabel,gLabel,bLabel);
 	}
 	
 	private void changeHex() {
 		saveHex.setDisable(false);
+		average.setVisible(true);
+		comp.setVisible(true);
 		int r = (int)red.getValue();
 		int g = (int)green.getValue();
 		int b = (int)blue.getValue();
@@ -279,27 +310,31 @@ public class MainScreen {
 	
 	private void positions() {
 		//position of all objects beside the sliders
-		imageBox.setTranslateY(-200);
+		imageBox.setTranslateY(-100);
 		
 		averageHex.setTranslateX(-475);
 		averageHex.setTranslateY(-50);
+		average.setTranslateX(-475);
+		average.setTranslateY(-250);
 		
 		compHex.setTranslateX(475);
 		compHex.setTranslateY(-50);
+		comp.setTranslateX(475);
+		comp.setTranslateY(-250);
 		
 		openFile.setTranslateX(-100);
-		openFile.setTranslateY(140);
+		openFile.setTranslateY(165);
 		
 		loadHex.setTranslateX(475);
 		loadHex.setTranslateY(200);
 		
 		//getHex.setTranslateX(0);
-		getHex.setTranslateY(75);
+		getHex.setTranslateY(225);
 		
-		nameHolder.setTranslateY(15);
+		nameHolder.setTranslateY(290);
 		
 		clearImage.setTranslateX(100);
-		clearImage.setTranslateY(140);
+		clearImage.setTranslateY(165);
 	}
 	
 	private void style() {

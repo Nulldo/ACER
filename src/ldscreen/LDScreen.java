@@ -127,7 +127,8 @@ public class LDScreen {
 				imageHolder.setImage( new Image(path));
 				getHex.setDisable(false);
 				fileHolder.setFile( new File(path.substring(6)));
-
+				imageHolder.fitWidthProperty().bind(Bindings.min(imageHolder.getImage().widthProperty(), imageBox.widthProperty()));
+				imageHolder.fitHeightProperty().bind(Bindings.min(imageHolder.getImage().heightProperty(), imageBox.heightProperty()));
 			} else {
 				getHex.setDisable(true);
 				imageHolder.setImage(null);				
@@ -146,9 +147,6 @@ public class LDScreen {
 			red.setValue(rgb.getRed());
 			green.setValue(rgb.getGreen());
 			blue.setValue(rgb.getBlue());
-			
-			imageHolder.fitWidthProperty().bind(Bindings.min(imageHolder.getImage().widthProperty(), imageBox.widthProperty()));
-			imageHolder.fitHeightProperty().bind(Bindings.min(imageHolder.getImage().heightProperty(), imageBox.heightProperty()));
 			
 			mainStage.setScene(mainScene);
 			
