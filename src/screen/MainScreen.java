@@ -118,6 +118,9 @@ public class MainScreen {
 		openFile.setOnAction(e -> {
 			loadImage();
 			getHex.setDisable(false);
+			if (comp.isDisabled() == false) {
+				saveHex.setDisable(false);
+			}
 		});
 		
 		mainPane.getChildren().add(openFile);
@@ -235,7 +238,7 @@ public class MainScreen {
 	private void scrolls() {
 		red = new Slider();
 		red.setMaxWidth(250);
-		red.setTranslateX(-475);
+		red.setTranslateX(-470);
 		red.setTranslateY(130);
 		red.setMax(255);
 		red.setMin(0);
@@ -250,11 +253,12 @@ public class MainScreen {
 		
 		red.valueProperty().addListener(e -> {
 			changeHex();
+			saveHex.setDisable(false);
 		});
 		
 		green = new Slider();
 		green.setMaxWidth(250);
-		green.setTranslateX(-475);
+		green.setTranslateX(-470);
 		green.setTranslateY(160);
 		green.setMin(0);
 		green.setMax(255);
@@ -268,11 +272,12 @@ public class MainScreen {
 		
 		green.valueProperty().addListener(e -> {
 			changeHex();
+			saveHex.setDisable(false);
 		});
 		
 		blue = new Slider();
 		blue.setMaxWidth(250);
-		blue.setTranslateX(-475);
+		blue.setTranslateX(-470);
 		blue.setTranslateY(190);
 		blue.setMin(0);
 		blue.setMax(255);
@@ -286,6 +291,7 @@ public class MainScreen {
 		
 		blue.valueProperty().addListener(e -> {
 			changeHex();
+			saveHex.setDisable(false);
 		});
 		
 		
@@ -293,7 +299,6 @@ public class MainScreen {
 	}
 	
 	private void changeHex() {
-		saveHex.setDisable(false);
 		average.setVisible(true);
 		comp.setVisible(true);
 		int r = (int)red.getValue();

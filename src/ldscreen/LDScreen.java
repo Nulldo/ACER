@@ -133,7 +133,6 @@ public class LDScreen {
 				getHex.setDisable(true);
 				imageHolder.setImage(null);				
 			}
-			saveHex.setDisable(false);
 			
 			averageHex.setText(hex);
 			averageHex.setStyle("-fx-text-fill: "+ comp +";-fx-background-color: " + hex +  ";-fx-border-color: " + comp + ";");
@@ -149,6 +148,8 @@ public class LDScreen {
 			blue.setValue(rgb.getBlue());
 			
 			mainStage.setScene(mainScene);
+			saveHex.setDisable(true);
+			database.close();
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
