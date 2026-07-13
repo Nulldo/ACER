@@ -207,6 +207,7 @@ public class MainScreen {
 			back.setVisible(true);
 			left.setDisable(true);
 			changeText(counter);
+			explanation.setVisible(true);
 		});
 		
 		scrolls();
@@ -270,6 +271,8 @@ public class MainScreen {
 			explanation.setVisible(false);
 		});
 		explanation = new Label();
+		explanation.setFont(Font.font("Nunito",25));
+		explanation.setStyle("-fx-background-color: #A4C290");
 		mainPane.getChildren().addAll(display,left,right,help,back,explanation);
 		
 		
@@ -463,13 +466,26 @@ public class MainScreen {
 	
 	private void changeText(int count) {
 		switch(count) {
-		case 0 -> explanation.setText("0");
-		case 1 -> explanation.setText("1");
-		case 2 -> explanation.setText("2");
-		case 3 -> explanation.setText("3");
-		case 4 -> explanation.setText("4");
-		case 5 -> explanation.setText("5");
-		default -> explanation.setText("Beef");
+		case 0: explanation.setText("Welcome to ACER, an application that can take the colors from an image and turn it into one average color.");
+				explanation.setTranslateY(-320);
+				display.setImage(new Image("file:images/display.png"));
+				break;
+		case 1: explanation.setText("After loading an image, you can press the generate hex button to display the average color of the image.");
+				display.setImage(new Image("file:images/display2.png"));
+				break;
+		case 2: explanation.setText("From here, you can adjust the color by its RGB values, clear the image, or name and save it for later use.");
+				display.setImage(new Image("file:images/display3.png"));
+				break;
+		case 3: explanation.setText("Clicking on the view color list button, it displays any saved colors.");
+				display.setImage(new Image("file:images/display4.png"));
+				break;
+		case 4: explanation.setText("You can also delete any unwanted colors. Beware that there is no recovery system so colors are deleted for good.");
+				display.setImage(new Image("file:images/display5.png"));
+				break;
+		case 5: explanation.setText("That's all the features of ACER. Have fun messing around with images and colors!");
+				display.setImage(new Image("file:images/display6.png"));
+				break;
+		default: explanation.setText("Beef");
 		}
 	}
 	
