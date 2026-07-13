@@ -67,7 +67,15 @@ public class MainScreen {
 	private Label bLabel;
 	
 	private Button help;
-
+	private Button left;
+	private Button right;
+	private Button back;
+	
+	private ImageView display;
+	
+	private Label explanation;
+	
+	private int counter = 0;
 
 	public MainScreen() {
 		//file workaround for getting hex from a file
@@ -162,6 +170,7 @@ public class MainScreen {
 		mainPane.getChildren().add(loadHex);
 		
 		name = new Label("Color Name:");
+		name.setStyle("-fx-text-fill: #5B3D6F");
 		nameField = new TextField("");
 		nameHolder = new HBox();
 		nameHolder.getChildren().addAll(name,nameField, saveHex);
@@ -190,13 +199,86 @@ public class MainScreen {
 		help.setAlignment(Pos.CENTER);
 		help.setMinWidth(42);
 		
-		mainPane.getChildren().add(help);
+		help.setOnAction(e -> {
+			left.setVisible(true);
+			right.setVisible(true);
+			display.setVisible(true);
+			help.setVisible(false);
+			back.setVisible(true);
+			left.setDisable(true);
+			changeText(counter);
+		});
 		
 		scrolls();
+		
+		ImageView lArrow = new ImageView(new Image("file:images/lArrow.png"));
+		lArrow.setFitHeight(50);
+		lArrow.setFitWidth(50);
+		
+		left = new Button();
+		left.setGraphic(lArrow);
+		left.setOnAction(e ->{
+			right.setDisable(false);
+			counter -= 1;
+			changeText(counter);
+			if (counter == 0) {
+				left.setDisable(true);
+			}
+		});
+		
+		
+		ImageView rArrow = new ImageView(new Image("file:images/rArrow.png"));
+		rArrow.setFitHeight(50);
+		rArrow.setFitWidth(50);
+		
+		right = new Button();
+		right.setGraphic(rArrow);
+		right.setOnAction(e ->{
+			left.setDisable(false);
+			counter += 1;
+			changeText(counter);
+			if (counter == 5) {
+				right.setDisable(true);
+			}
+		});
+		
+		left.setVisible(false);
+		right.setVisible(false);
+		
+		display = new ImageView(new Image("file:images/display.png"));
+		display.setVisible(false);
+		display.setFitHeight(790);
+		display.setFitWidth(1532);
+		display.setTranslateX(-1);
+		
+		back = new Button("X");
+		back.setShape(new Circle(1));
+		back.setAlignment(Pos.CENTER);
+		back.setFont(Font.font("Ariel",20));
+		back.setMinWidth(42);
+		back.setMinHeight(42);
+		back.setVisible(false);
+		
+		back.setOnAction(e ->{
+			left.setVisible(false);
+			right.setVisible(false);
+			right.setDisable(false);
+			display.setVisible(false);
+			help.setVisible(true);
+			back.setVisible(false);
+			counter = 0;
+			explanation.setVisible(false);
+		});
+		explanation = new Label();
+		mainPane.getChildren().addAll(display,left,right,help,back,explanation);
+		
+		
+		
 		positions();
 		
 		showScreen();
 		style();
+		
 	}
 	
 	private void loadImage() {
@@ -258,6 +340,7 @@ public class MainScreen {
 		rLabel = new Label("Red");
 		rLabel.setTranslateX(-610);
 		rLabel.setTranslateY(120);
+		rLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
 		red.valueProperty().addListener(e -> {
 			changeHex();
@@ -277,6 +360,7 @@ public class MainScreen {
 		gLabel = new Label("Green");
 		gLabel.setTranslateX(-610);
 		gLabel.setTranslateY(150);
+		gLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
 		green.valueProperty().addListener(e -> {
 			changeHex();
@@ -296,6 +380,7 @@ public class MainScreen {
 		bLabel = new Label("Blue");
 		bLabel.setTranslateX(-610);
 		bLabel.setTranslateY(180);
+		bLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
 		blue.valueProperty().addListener(e -> {
 			changeHex();
@@ -351,6 +436,13 @@ public class MainScreen {
 		
 		help.setTranslateX(-725);
 		help.setTranslateY(-365);
+		
+		back.setTranslateX(-725);
+		back.setTranslateY(-365);
+		
+		left.setTranslateX(-700);
+		
+		right.setTranslateX(700);
 	}
 	
 	private void style() {
@@ -362,6 +454,23 @@ public class MainScreen {
 		help.setStyle(buttonStyle);
 		
 		loadHex.setMinHeight(loadHex.getWidth());
+		
+		mainPane.setStyle("-fx-background-color: #A4C290");
+
+		average.setStyle("-fx-text-fill: #5B3D6F");
+		comp.setStyle("-fx-text-fill: #5B3D6F");
+	}
+	
+	private void changeText(int count) {
+		switch(count) {
+		case 0 -> explanation.setText("0");
+		case 1 -> explanation.setText("1");
+		case 2 -> explanation.setText("2");
+		case 3 -> explanation.setText("3");
+		case 4 -> explanation.setText("4");
+		case 5 -> explanation.setText("5");
+		default -> explanation.setText("Beef");
+		}
 	}
 	
 }

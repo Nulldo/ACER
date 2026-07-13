@@ -96,6 +96,7 @@ public class LDScreen {
 
 		mainPane.setContent(stackPane);
 		
+		stackPane.setStyle("-fx-background-color: #A4C290");
 		showScreen(mainStage);
 		back.setTranslateY(mainV.getChildren().size()*-175);
 		mainPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);

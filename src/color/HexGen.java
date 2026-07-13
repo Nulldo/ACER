@@ -22,10 +22,11 @@ public class HexGen {
 				
 				for (int i=0; i < rgbVal.length; i++) {
 					Color c = new Color(rgbVal[i]);
-					
+					if (c.getAlpha() > 254){
 					r += c.getRed();
 					g += c.getGreen();
 					b += c.getBlue();
+					}
 				}
 				r = r/rgbVal.length;
 				g = g/rgbVal.length;
