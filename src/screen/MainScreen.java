@@ -23,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import crud.Crud;
 import ldscreen.*;
 import javafx.scene.control.Slider;
+import javafx.scene.shape.Circle;
 
 import color.HexGen;
 
@@ -65,6 +66,7 @@ public class MainScreen {
 	private Label gLabel;
 	private Label bLabel;
 	
+	private Button help;
 
 
 	public MainScreen() {
@@ -183,6 +185,12 @@ public class MainScreen {
 		
 		mainPane.getChildren().add(clearImage);
 		
+		help = new Button("?");
+		help.setShape(new Circle(1));
+		help.setAlignment(Pos.CENTER);
+		help.setMinWidth(42);
+		
+		mainPane.getChildren().add(help);
 		
 		scrolls();
 		positions();
@@ -340,6 +348,9 @@ public class MainScreen {
 		
 		clearImage.setTranslateX(100);
 		clearImage.setTranslateY(165);
+		
+		help.setTranslateX(-725);
+		help.setTranslateY(-365);
 	}
 	
 	private void style() {
@@ -348,6 +359,7 @@ public class MainScreen {
 		openFile.setStyle(buttonStyle);
 		clearImage.setStyle(buttonStyle);
 		loadHex.setStyle(buttonStyle);
+		help.setStyle(buttonStyle);
 		
 		loadHex.setMinHeight(loadHex.getWidth());
 	}
