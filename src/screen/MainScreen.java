@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.stage.Stage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -17,6 +18,7 @@ import java.awt.Color;
 import java.io.File;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.function.UnaryOperator;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -65,6 +67,14 @@ public class MainScreen {
 	private Label rLabel;
 	private Label gLabel;
 	private Label bLabel;
+	
+	private TextField rTF;
+	private TextField gTF;
+	private TextField bTF;
+	
+	UnaryOperator<TextFormatter.Change> rFilter;
+	UnaryOperator<TextFormatter.Change> gFilter;
+	UnaryOperator<TextFormatter.Change> bFilter;
 	
 	private Button help;
 	private Button left;
@@ -329,6 +339,8 @@ public class MainScreen {
 	}
 	
 	private void scrolls() {
+		filters();
+		
 		red = new Slider();
 		red.setMaxWidth(250);
 		red.setTranslateX(-470);
@@ -343,9 +355,21 @@ public class MainScreen {
 		rLabel = new Label("Red");
 		rLabel.setTranslateX(-610);
 		rLabel.setTranslateY(120);
-		rLabel.setStyle("-fx-text-fill: #5B3D6F");
+		rLabel.setStyle("-fx-text-fill: #5B3D6F");		
+		
+		rTF = new TextField("255");
+		rTF.setTranslateX(-320);
+		rTF.setTranslateY(120);
+		rTF.setStyle("-fx-text-fill: #5B3D6F");
+		rTF.setMaxWidth(35);
+		rTF.setAlignment(Pos.CENTER);
+		rTF.setTextFormatter(new TextFormatter<>(rFilter));
+		rTF.setOnKeyTyped(e-> {red.setValue(Double.valueOf(rTF.getText()));});
 		
 		red.valueProperty().addListener(e -> {
+			if ((int)red.getValue() != Integer.valueOf(rTF.getText())) {
+				rTF.setText(String.valueOf((int)red.getValue()));
+			}
 			changeHex();
 			saveHex.setDisable(false);
 		});
@@ -365,7 +389,20 @@ public class MainScreen {
 		gLabel.setTranslateY(150);
 		gLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
+		gTF = new TextField("255");
+		gTF.setTranslateX(-320);
+		gTF.setTranslateY(150);
+		gTF.setStyle("-fx-text-fill: #5B3D6F");
+		gTF.setMaxWidth(35);
+		gTF.setAlignment(Pos.CENTER);
+		gTF.setTextFormatter(new TextFormatter<>(gFilter));
+		gTF.setOnKeyTyped(e-> {green.setValue(Double.valueOf(gTF.getText()));});
+		
 		green.valueProperty().addListener(e -> {
+			if ((int)green.getValue() != Integer.valueOf(gTF.getText())) {
+				gTF.setText(String.valueOf((int)green.getValue()));
+			}
+			
 			changeHex();
 			saveHex.setDisable(false);
 		});
@@ -377,6 +414,7 @@ public class MainScreen {
 		blue.setMin(0);
 		blue.setMax(255);
 		blue.setBlockIncrement(1);
+		blue.setMajorTickUnit(25);
 		blue.setShowTickLabels(true);
 		blue.setValue(255);
 		
@@ -385,13 +423,26 @@ public class MainScreen {
 		bLabel.setTranslateY(180);
 		bLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
+		bTF = new TextField("255");
+		bTF.setTranslateX(-320);
+		bTF.setTranslateY(180);
+		bTF.setStyle("-fx-text-fill: #5B3D6F");
+		bTF.setMaxWidth(35);
+		bTF.setAlignment(Pos.CENTER);
+		bTF.setTextFormatter(new TextFormatter<>(bFilter));
+		bTF.setOnKeyTyped(e-> {blue.setValue(Double.valueOf(bTF.getText()));});
+		
 		blue.valueProperty().addListener(e -> {
+			if ((int)blue.getValue() != Integer.valueOf(bTF.getText())) {
+				bTF.setText(String.valueOf((int)blue.getValue()));
+			}
+			
 			changeHex();
 			saveHex.setDisable(false);
 		});
 		
-		
-		mainPane.getChildren().addAll(red,green,blue,rLabel,gLabel,bLabel);
+		mainPane.getChildren().addAll(red,green,blue,rLabel,gLabel,bLabel,rTF,gTF,bTF);
+	
 	}
 	
 	private void changeHex() {
@@ -488,6 +539,51 @@ public class MainScreen {
 				break;
 		default: explanation.setText("Beef");
 		}
+	}
+	
+	private void filters() {
+		rFilter = change -> {
+		    String text = change.getControlNewText();
+		    
+		    if (text.matches("")) {
+		    	rTF.setText("0");
+		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 256 ) {
+		    	rTF.setText("255");
+		    } else if (text.matches("\\d*") && text.length() <= 3 && Integer.valueOf(text) < 256 ) {
+		    	return change;
+		    }
+		    return null;
+		};
+		
+		gFilter = change -> {
+		    String text = change.getControlNewText();
+		    
+		    if (text.matches("")) {
+		    	gTF.setText("0");
+		    	return null;
+		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 256 ) {
+		    	gTF.setText("255");
+		    	return null;
+		    } else if (text.matches("\\d*") && text.length() <= 3 && Integer.valueOf(text) < 256 ) {
+		        return change; 
+		    }
+		    return null;
+		};
+		
+		bFilter = change -> {
+		    String text = change.getControlNewText();
+		    
+		    if (text.matches("")) {
+		    	bTF.setText("0");
+		    	return null;
+		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 256 ) {
+		    	bTF.setText("255");
+		    	return null;
+		    } else if (text.matches("\\d*") && text.length() <= 3 && Integer.valueOf(text) < 256 ) {
+		        return change; 
+		    }
+		    return null;
+		};
 	}
 	
 }
