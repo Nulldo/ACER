@@ -80,8 +80,8 @@ public class LDScreen {
 		});
 		
 		stackPane.getChildren().add(back);
-		back.setTranslateX(-735);
-		
+		back.setTranslateX(-730);
+		back.setStyle("-fx-font-size:15");
 		 
 		mainV = new VBox();
 		mainV.setMaxWidth(650);
@@ -98,8 +98,11 @@ public class LDScreen {
 		
 		stackPane.setStyle("-fx-background-color: #A4C290");
 		stackPane.setMinHeight(790);
+		
+		back.setTranslateY(-160-360*(mainV.getChildren().size()/2-(((mainV.getChildren().size()+1)%2)*.5)));
+		mainV.toBack();
 		showScreen(mainStage);
-		back.setTranslateY(mainV.getChildren().size()*-175);
+		
 		mainPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 	}
 	
@@ -235,10 +238,44 @@ public class LDScreen {
 				vbox.setPadding(new Insets(0,10,10,10));
 				
 				mainV.getChildren().add(vbox);
-				deleteColor.setOnAction(e -> {
+				
+				VBox popup = new VBox();
+				HBox yn = new HBox();
+				Label ask = new Label("Are you sure \nyou want to \ndelete this color?");
+				Button yes = new Button("Yes");
+				Button no = new Button("No");
+				
+				popup.setMaxWidth(100);
+				popup.setMaxHeight(100);
+				popup.setAlignment(Pos.CENTER);
+				popup.setStyle("-fx-background-color: #FFFFFF;-fx-border-width: 2; -fx-border-color: #000000;");
+							
+				yn.getChildren().addAll(yes,no);
+				yn.setAlignment(Pos.CENTER);
+				popup.getChildren().addAll(ask,yn);
+				stackPane.getChildren().add(popup);
+				no.setOnAction(e->popup.setVisible(false));
+				
+				yes.setOnAction(e -> {
 					new Crud().delete(id);
 					mainV.getChildren().remove(vbox);
-					back.setTranslateY(mainV.getChildren().size()*-175);					
+					back.setTranslateY(-160-360*(mainV.getChildren().size()/2-(((mainV.getChildren().size()+1)%2)*.5)));
+					stackPane.getChildren().remove(popup);
+				});
+				
+				popup.setVisible(false);
+				deleteColor.setOnAction(e -> {
+					Object[] boxes = mainV.getChildren().toArray();
+					for (int i=0; i<boxes.length; i++) {
+						stackPane.getChildren().get(i+2).setVisible(false);
+						if (vbox == boxes[i]) {
+							if (i < boxes.length) {
+							popup.setTranslateY(-360*(boxes.length/2-i-(((boxes.length+1)%2)*.5)));
+							}
+						}
+					}
+					//popup.setTranslateY(deleteColor.getLayoutX());
+					popup.setVisible(true);				
 				});
 			}
 			
