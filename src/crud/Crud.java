@@ -17,7 +17,7 @@ public class Crud {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			System.out.println("Driver loaded");
 			
-			//Establish a connection
+			//Establish a connection                                    Replace - name of database - user  - password
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/color_database", "root", "Box-chan1");
 			System.out.println("Connection Established");
 			
