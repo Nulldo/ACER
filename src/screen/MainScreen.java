@@ -25,6 +25,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import crud.Crud;
 import ldscreen.*;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
 import javafx.scene.shape.Circle;
 
 import color.HexGen;
@@ -68,9 +69,9 @@ public class MainScreen {
 	private Label gLabel;
 	private Label bLabel;
 	
-	private TextField rTF;
-	private TextField gTF;
-	private TextField bTF;
+	private Spinner<Integer> rSpinner;
+	private Spinner<Integer> gSpinner;
+	private Spinner<Integer> bSpinner;
 	
 	UnaryOperator<TextFormatter.Change> rFilter;
 	UnaryOperator<TextFormatter.Change> gFilter;
@@ -86,6 +87,8 @@ public class MainScreen {
 	private Label explanation;
 	
 	private int counter = 0;
+	
+	
 
 	public MainScreen() {
 		//file workaround for getting hex from a file
@@ -283,15 +286,12 @@ public class MainScreen {
 		explanation = new Label();
 		explanation.setFont(Font.font("Nunito",25));
 		explanation.setStyle("-fx-background-color: #A4C290");
+		
+		
 		mainPane.getChildren().addAll(display,left,right,help,back,explanation);
-		
-		
-		
 		positions();
-		
-		showScreen();
 		style();
-		
+		showScreen();
 	}
 	
 	private void loadImage() {
@@ -355,24 +355,29 @@ public class MainScreen {
 		rLabel = new Label("Red");
 		rLabel.setTranslateX(-610);
 		rLabel.setTranslateY(120);
-		rLabel.setStyle("-fx-text-fill: #5B3D6F");		
+		rLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
-		rTF = new TextField("255");
-		rTF.setTranslateX(-320);
-		rTF.setTranslateY(120);
-		rTF.setStyle("-fx-text-fill: #5B3D6F");
-		rTF.setMaxWidth(35);
-		rTF.setAlignment(Pos.CENTER);
-		rTF.setTextFormatter(new TextFormatter<>(rFilter));
-		rTF.setOnKeyTyped(e-> {red.setValue(Double.valueOf(rTF.getText()));});
+		rSpinner = new Spinner<Integer>(0,255,255,1);
+		rSpinner.setEditable(true);
+		rSpinner.setMaxWidth(60);
+		rSpinner.setTranslateX(-310);
+		rSpinner.setTranslateY(120);
 		
 		red.valueProperty().addListener(e -> {
-			if ((int)red.getValue() != Integer.valueOf(rTF.getText())) {
-				rTF.setText(String.valueOf((int)red.getValue()));
+			if ((int)red.getValue() != rSpinner.getValue()) {
+				rSpinner.getValueFactory().setValue((int)red.getValue());
 			}
 			changeHex();
 			saveHex.setDisable(false);
 		});
+		
+		rSpinner.valueProperty().addListener(e -> {
+			if ((int)red.getValue() != rSpinner.getValue()) {
+			red.setValue(rSpinner.getValue());
+			}
+		});
+		
+		rSpinner.getEditor().setTextFormatter(new TextFormatter<>(rFilter));
 		
 		green = new Slider();
 		green.setMaxWidth(250);
@@ -389,23 +394,28 @@ public class MainScreen {
 		gLabel.setTranslateY(150);
 		gLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
-		gTF = new TextField("255");
-		gTF.setTranslateX(-320);
-		gTF.setTranslateY(150);
-		gTF.setStyle("-fx-text-fill: #5B3D6F");
-		gTF.setMaxWidth(35);
-		gTF.setAlignment(Pos.CENTER);
-		gTF.setTextFormatter(new TextFormatter<>(gFilter));
-		gTF.setOnKeyTyped(e-> {green.setValue(Double.valueOf(gTF.getText()));});
+		gSpinner =  new Spinner<Integer>(0,255,255,1);
+		gSpinner.setTranslateX(-310);
+		gSpinner.setTranslateY(150);
+		gSpinner.setMaxWidth(60);
+		gSpinner.setEditable(true);
 		
 		green.valueProperty().addListener(e -> {
-			if ((int)green.getValue() != Integer.valueOf(gTF.getText())) {
-				gTF.setText(String.valueOf((int)green.getValue()));
+			if ((int)green.getValue() != gSpinner.getValue()) {
+				gSpinner.getValueFactory().setValue((int)green.getValue());
 			}
 			
 			changeHex();
 			saveHex.setDisable(false);
 		});
+		
+		gSpinner.valueProperty().addListener(e -> {
+			if ((int)green.getValue() != gSpinner.getValue()) {
+			green.setValue(gSpinner.getValue());
+			}
+		});
+		
+		gSpinner.getEditor().setTextFormatter(new TextFormatter<>(gFilter));
 		
 		blue = new Slider();
 		blue.setMaxWidth(250);
@@ -423,25 +433,30 @@ public class MainScreen {
 		bLabel.setTranslateY(180);
 		bLabel.setStyle("-fx-text-fill: #5B3D6F");
 		
-		bTF = new TextField("255");
-		bTF.setTranslateX(-320);
-		bTF.setTranslateY(180);
-		bTF.setStyle("-fx-text-fill: #5B3D6F");
-		bTF.setMaxWidth(35);
-		bTF.setAlignment(Pos.CENTER);
-		bTF.setTextFormatter(new TextFormatter<>(bFilter));
-		bTF.setOnKeyTyped(e-> {blue.setValue(Double.valueOf(bTF.getText()));});
+		bSpinner =  new Spinner<Integer>(0,255,255,1);
+		bSpinner.setTranslateX(-310);
+		bSpinner.setTranslateY(180);
+		bSpinner.setMaxWidth(60);
+		bSpinner.setEditable(true);
 		
 		blue.valueProperty().addListener(e -> {
-			if ((int)blue.getValue() != Integer.valueOf(bTF.getText())) {
-				bTF.setText(String.valueOf((int)blue.getValue()));
+			if ((int)blue.getValue() != bSpinner.getValue()) {
+				bSpinner.getValueFactory().setValue((int)blue.getValue());
 			}
 			
 			changeHex();
 			saveHex.setDisable(false);
 		});
 		
-		mainPane.getChildren().addAll(red,green,blue,rLabel,gLabel,bLabel,rTF,gTF,bTF);
+		bSpinner.valueProperty().addListener(e -> {
+			if ((int)blue.getValue() != bSpinner.getValue()) {
+			blue.setValue(bSpinner.getValue());
+			}
+		});
+		
+		bSpinner.getEditor().setTextFormatter(new TextFormatter<>(bFilter));
+		
+		mainPane.getChildren().addAll(red,green,blue,rLabel,gLabel,bLabel,rSpinner,gSpinner,bSpinner);
 	
 	}
 	
@@ -509,7 +524,7 @@ public class MainScreen {
 		loadHex.setStyle(buttonStyle);
 		help.setStyle(buttonStyle);
 		
-		loadHex.setMinHeight(loadHex.getWidth());
+		loadHex.setMinHeight(90);
 		
 		mainPane.setStyle("-fx-background-color: #A4C290");
 
@@ -546,9 +561,9 @@ public class MainScreen {
 		    String text = change.getControlNewText();
 		    
 		    if (text.matches("")) {
-		    	rTF.setText("0");
-		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 256 ) {
-		    	rTF.setText("255");
+		    	rSpinner.getValueFactory().setValue(0);
+		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 255 ) {
+		    	rSpinner.getValueFactory().setValue(255);
 		    } else if (text.matches("\\d*") && text.length() <= 3 && Integer.valueOf(text) < 256 ) {
 		    	return change;
 		    }
@@ -559,13 +574,11 @@ public class MainScreen {
 		    String text = change.getControlNewText();
 		    
 		    if (text.matches("")) {
-		    	gTF.setText("0");
-		    	return null;
-		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 256 ) {
-		    	gTF.setText("255");
-		    	return null;
+		    	gSpinner.getValueFactory().setValue(0);
+		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 255 ) {
+		    	gSpinner.getValueFactory().setValue(255);
 		    } else if (text.matches("\\d*") && text.length() <= 3 && Integer.valueOf(text) < 256 ) {
-		        return change; 
+		    	return change;
 		    }
 		    return null;
 		};
@@ -574,13 +587,11 @@ public class MainScreen {
 		    String text = change.getControlNewText();
 		    
 		    if (text.matches("")) {
-		    	bTF.setText("0");
-		    	return null;
-		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 256 ) {
-		    	bTF.setText("255");
-		    	return null;
+		    	bSpinner.getValueFactory().setValue(0);
+		    } else if (text.matches("\\d*") && text.length() <= 4 && Integer.valueOf(text) > 255 ) {
+		    	bSpinner.getValueFactory().setValue(255);
 		    } else if (text.matches("\\d*") && text.length() <= 3 && Integer.valueOf(text) < 256 ) {
-		        return change; 
+		    	return change;
 		    }
 		    return null;
 		};
