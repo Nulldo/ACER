@@ -20,6 +20,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.function.UnaryOperator;
 
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import crud.Crud;
@@ -295,10 +296,17 @@ public class MainScreen {
 	}
 	
 	private void loadImage() {
+		
 		JFileChooser fileChooser = new JFileChooser();
+		JDialog dialog = new JDialog();
+		
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg");
 	    fileChooser.setFileFilter(filter);
-	    int returnVal = fileChooser.showOpenDialog(null);
+	    
+		dialog.setAlwaysOnTop(true);
+		
+		
+	    int returnVal = fileChooser.showOpenDialog(dialog);
 	    
 	    if(returnVal == JFileChooser.APPROVE_OPTION) {
 	    	fileHolder.setFile(fileChooser.getSelectedFile());
@@ -307,7 +315,6 @@ public class MainScreen {
 			imageHolder.fitHeightProperty().bind(Bindings.min(imageHolder.getImage().heightProperty(), imageBox.heightProperty()));
 	    	
 	    }
-
 	}
 	
 	private void genHex() {
